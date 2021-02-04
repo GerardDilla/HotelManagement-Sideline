@@ -30,52 +30,69 @@
 	
     
         
+			<br>
+			<?php $i=0; foreach($room_types as $rt): ?>
 
-             <?php 
-             $i=0;
-             foreach($room_types as $rt):
-             $rt_image	=	get_room_type_featured_image_medium($rt->id);
-             $amenities	=	$this->homepage_model->get_amenities($rt->id);
-             ?>
-			 <div class="room-sec">
-			 	<div class=" text-center">
-			 
-			 <div class = "container">
-			 	<div class = "bg-light">
-			 	 <div class = "row2">
-			 	<div class = "col-md-4">
-			 
-                 <form method="get" action="<?php echo site_url('front/book/index')?>">
-					<input type="hidden" name="date_from" value="<?php echo @$_GET['date_from']?>" />
-					<input type="hidden" name="date_to" value="<?php echo @$_GET['date_to']?>" />
-					<input type="hidden" name="adults" value="<?php echo @$_GET['adults']?>" />
-					<input type="hidden" name="kids" value="<?php echo @$_GET['kids']?>" />
-					<input type="hidden" name="room_type" value="<?php echo $rt->id?>" />
-                    <img src="<?php echo $rt_image?>" alt="" class=" "style = "width:500px !important; height: 300px;" />
-                    </div>
-                    <div class = "col-md-8">
-				    <h4 class = "rmname" ><a class = "roomname"href="<?php echo site_url('rooms/'.$rt->slug)?>"><?php echo $rt->title?></a></h4>
-                   <h4 class = "roomdesc"><?php echo substr($rt->description,0,200)?></h4>
-                    <ul class="items list-inline">
-                        <?php foreach($amenities as $am):?>
-							<li class = "amenitiesmargin"><img src="<?php echo base_url('assets/admin/uploads/amenities/'.$am->image)?>" class="img-responsive gray " width="25" title="<?php echo $am->name?>" data-toggle="tooltip"/></li>
-
-						<?php endforeach; ?>	
-   				    
-   				    
-
-   				    
-                    <h4 class="text-uppercase roomfrom"><?php echo lang('from')?> <?php echo $this->session->userdata('currency_sybmol'); ?> <?php echo rate_exchange($rt->base_price)?> <span class="small rates"> / <?php echo lang('night')?></span></h4>
-                    <div class="keywords" style = "margin-left: 240px;width:40% !important;">	
-			   	         <button type="submit" class = "btnbook"><a style = "color:black;"href="<?php echo site_url('rooms/'.$rt->slug)?>">Room Details</a></button>
-			   	         </div>
-			   	         </div>
-			   	         </div>
-        			</div>
-        		</div>
-				</form>
-			 </div>
-             <?php 
+				<?php 			
+					$rt_image	=	get_room_type_featured_image_medium($rt->id);
+					$amenities	=	$this->homepage_model->get_amenities($rt->id);
+				?>
+			<div class="row">
+				<div class="col-md-3">
+				
+				</div>
+				<div class="col-md-6 bg-light">
+					<div class="row">
+						<div class="col-md-6">
+							<img src="<?php echo $rt_image?>" style="width:100%; height:auto"/>
+						</div>
+						<div class="col-md-6">
+							<h1 style="margin:5%"><b class = "roomname"href="<?php echo site_url('rooms/'.$rt->slug)?>"><?php echo $rt->title?></b></h1>
+							<h4 style="margin:5%"><?php echo substr($rt->description,0,200)?></h4>
+							<ul class="items list-inline" style="margin:5%">
+								<?php foreach($amenities as $am):?>
+									<li class = "amenitiesmargin"><img src="<?php echo base_url('assets/admin/uploads/amenities/'.$am->image)?>" class="img-responsive gray " width="25" title="<?php echo $am->name?>" data-toggle="tooltip"/></li>
+								<?php endforeach; ?>	
+							</ul>
+							<br>
+							<div class="row" >
+								<div class="col-md-12">
+									<h4 class="text-uppercase">
+										<?php echo lang('from')?> 
+										<?php echo $this->session->userdata('currency_sybmol'); ?> 
+										<?php echo rate_exchange($rt->base_price)?> 
+										<span class="small rates"> / <?php echo lang('night')?></span>
+									</h4>
+								</div>
+								<div class="col-md-6">
+									<!-- <form method="get" action="<?php echo site_url('front/book/index')?>">
+										<input type="hidden" name="date_from" value="<?php echo @$_GET['date_from']?>" />
+										<input type="hidden" name="date_to" value="<?php echo @$_GET['date_to']?>" />
+										<input type="hidden" name="adults" value="<?php echo @$_GET['adults']?>" />
+										<input type="hidden" name="kids" value="<?php echo @$_GET['kids']?>" />
+										<input type="hidden" name="room_type" value="<?php echo $rt->id?>" />
+										
+									</form> -->
+									<a style = "color:black;"href="<?php echo site_url('rooms/'.$rt->slug)?>"><button type="submit" style="width:100%" class = "btnbook">Room Details</button></a>
+								</div>
+								<div class="col-md-6">
+									<form method="post" action="<?php echo site_url('page/room-availability')?>" target="_blank">
+										<input type="hidden" name="room_type_id" value="<?php echo $rt->id?>" />
+										<button type="submit" style="width:100%" class = "btnbook">Check Availability</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+				
+				</div>
+				<div class="col-md-12">
+					<br>
+				</div>
+			</div>
+			<?php 
              $i++;
 			 if($i%4 == 0) :
 			   echo ' <div class="clearfix"></div>

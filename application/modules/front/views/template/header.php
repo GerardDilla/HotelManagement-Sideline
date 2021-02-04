@@ -25,6 +25,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <link href="<?php echo base_url('assets/front')?>/css/owl.carousel.css" rel="stylesheet" />
 <link href="<?php echo base_url('assets/admin/plugins/toastr')?>/toastr.min.css" rel="stylesheet" type="text/css" media="all" />
 <link href="<?php echo base_url('assets/front')?>/css/flexslider.css" type="text/css" media="screen" />    
+
+
+
 <!-- start-smoth-scrolling -->
 <script>
 	SITE_URL	=	'<?php echo site_url()?>';

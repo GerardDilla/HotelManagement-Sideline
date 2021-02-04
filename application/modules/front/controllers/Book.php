@@ -366,97 +366,122 @@ class Book extends Front_Controller {
 	}
 	
 	function stripe(){
-		//echo '<pre>'; print_r($this->session->all_userdata());die;
+			//echo '<pre>'; print_r($this->session->all_userdata());die;
 			$data['booking_data']	=		$booking_data	=	$this->session->userdata('booking_data');
-				//echo '<pre>'; print_r($booking_data);die;	
-			if ($this->input->server('REQUEST_METHOD') === 'POST')
-        	{
-				try {
-					require_once APPPATH. '/third_party/Stripe/lib/Stripe.php';
-					//require_once('Stripe/lib/Stripe.php');
-					Stripe::setApiKey($this->setting->stripe_api_key);
+			// 	//echo '<pre>'; print_r($booking_data);die;	
+			// if ($this->input->server('REQUEST_METHOD') === 'POST')
+        	// {
+			// 	try{
+			// 		require_once APPPATH. '/third_party/Stripe/lib/Stripe.php';
+			// 		//require_once('Stripe/lib/Stripe.php');
+			// 		Stripe::setApiKey($this->setting->stripe_api_key);
 				
-					$charge = Stripe_Charge::create(array(
-								  "amount" => rate_exchange($booking_data['advance_amount'])*100,//$booking_data['order_no']*100,
-								  "currency" => $booking_data['currency'],
-								  "card" => @$_POST['stripeToken'],
-								  "description" => "Order Number ".$booking_data['order_no']." Booking For Room ".$booking_data['room_type']
-								));
-					//send the file, this line will be reached if no error was thrown above
+			// 		$charge = Stripe_Charge::create(array(
+			// 					  "amount" => rate_exchange($booking_data['advance_amount'])*100,//$booking_data['order_no']*100,
+			// 					  "currency" => $booking_data['currency'],
+			// 					  "card" => @$_POST['stripeToken'],
+			// 					  "description" => "Order Number ".$booking_data['order_no']." Booking For Room ".$booking_data['room_type']
+			// 					));
+			// 		//send the file, this line will be reached if no error was thrown above
+			// 		//you can send the file to this email:	
+			// 		//echo $_POST['stripeEmail'];
+			// 		///echo '<pre>-->1'; print_r($_POST);
+			// 		//echo '<pre>-->2'; print_r($_REQUEST);die;
+			// 		//die;
+
+			// 	}
 				
-				
+			// 	catch(Stripe_CardError $e) {
 					
-				  //you can send the file to this email:
-					
-				  //echo $_POST['stripeEmail'];
-				  ///echo '<pre>-->1'; print_r($_POST);
-				  //echo '<pre>-->2'; print_r($_REQUEST);die;
-				  //die;
-				}
+			// 	}
+			// 	//catch the errors in any way you like
 				
-				catch(Stripe_CardError $e) {
-					
-				}
-				//catch the errors in any way you like
-				
-				 catch (Stripe_InvalidRequestError $e) {
-				  // Invalid parameters were supplied to Stripe's API
-				  $this->session->set_flashdata('error', "Payment error");
-					redirect('');
+			// 	 catch (Stripe_InvalidRequestError $e) {
+			// 	  // Invalid parameters were supplied to Stripe's API
+			// 	  $this->session->set_flashdata('error', "Payment error");
+			// 		redirect('');
 
 				
-				} catch (Stripe_AuthenticationError $e) {
-				  // Authentication with Stripe's API failed
-				  // (maybe you changed API keys recently)
+			// 	} catch (Stripe_AuthenticationError $e) {
+			// 	  // Authentication with Stripe's API failed
+			// 	  // (maybe you changed API keys recently)
 				
-					$this->session->set_flashdata('error', "Payment error");
-					redirect('');
+			// 		$this->session->set_flashdata('error', "Payment error");
+			// 		redirect('');
 
-				} catch (Stripe_ApiConnectionError $e) {
-				  // Network communication with Stripe failed
-					$this->session->set_flashdata('error', "Payment error");
-					redirect('');
+			// 	} catch (Stripe_ApiConnectionError $e) {
+			// 	  // Network communication with Stripe failed
+			// 		$this->session->set_flashdata('error', "Payment error");
+			// 		redirect('');
 
-				} catch (Stripe_Error $e) {
+			// 	} catch (Stripe_Error $e) {
 				
-				  // Display a very generic error to the user, and maybe send
-				  // yourself an email
-					$this->session->set_flashdata('error', "Payment error");
-					redirect('');
+			// 	  // Display a very generic error to the user, and maybe send
+			// 	  // yourself an email
+			// 		$this->session->set_flashdata('error', "Payment error");
+			// 		redirect('');
 
-				} catch (Exception $e) {
+			// 	} catch (Exception $e) {
 				
-					$this->session->set_flashdata('error', "Payment error");
-					redirect('');
-				  // Something else happened, completely unrelated to Stripe
-				}
+			// 		$this->session->set_flashdata('error', "Payment error");
+			// 		redirect('');
+			// 	  // Something else happened, completely unrelated to Stripe
+			// 	}
 				
-				//echo '<pre>'; print_r($_REQUEST);die;
-					$id											=	$booking_data['order_id'];
-					$save['payment_status']						=	3;	//partialy_paid
-					$save['status']								=	1;
-					$save['payment_gateway_status']				=	$_REQUEST['stripeEmail'];
-					$save['payment_gateway_name']				=	"Stripe";
-					$save['txn_id']								=	$_REQUEST['stripeToken'];
+			// 	//echo '<pre>'; print_r($_REQUEST);die;
+			// 		$id											=	$booking_data['order_id'];
+			// 		$save['payment_status']						=	3;	//partialy_paid
+			// 		$save['status']								=	1;
+			// 		$save['payment_gateway_status']				=	$_REQUEST['stripeEmail'];
+			// 		$save['payment_gateway_name']				=	"Stripe";
+			// 		$save['txn_id']								=	$_REQUEST['stripeToken'];
 					
-					$this->book_model->update_order($save,$id);
-					$data['order']	=	$this->book_model->get_order($booking_data['order_id']);
+			// 		$this->book_model->update_order($save,$id);
+			// 		$data['order']	=	$this->book_model->get_order($booking_data['order_id']);
 							
-						$save_payment['order_id']		=	$id;
-						$save_payment['date_time']		=	date('Y-m-d H:i:s');
-						$save_payment['added_date']		=	date('Y-m-d H:i:s');
-						$save_payment['amount']			=	$data['order']->advance_amount;
-						$save_payment['invoice']		=	get_invoice_number();
-						$save_payment['is_main_amount']	=	1;
-						$save_payment['payment_method']	=	'Stripe';
-						$this->book_model->save_payment($save_payment);
-					$this->mail_booking($booking_data['order_id']);	
-					$this->session->set_flashdata('message', "Booking Payment Success");
-					redirect('front/book/order');
-			}
-			$data['page_title']	=	lang('payment');
+			// 			$save_payment['order_id']		=	$id;
+			// 			$save_payment['date_time']		=	date('Y-m-d H:i:s');
+			// 			$save_payment['added_date']		=	date('Y-m-d H:i:s');
+			// 			$save_payment['amount']			=	$data['order']->advance_amount;
+			// 			$save_payment['invoice']		=	get_invoice_number();
+			// 			$save_payment['is_main_amount']	=	1;
+			// 			$save_payment['payment_method']	=	'Stripe';
+			// 			$this->book_model->save_payment($save_payment);
+			// 		$this->mail_booking($booking_data['order_id']);	
+			// 		$this->session->set_flashdata('message', "Booking Payment Success");
+			// 		redirect('front/book/order');
+			// }
+			// $data['page_title']	=	lang('payment');
+			$Token = json_decode($this->paypal_lib->paypal_auth());
+			//die($Token);
+			$client_token_response = json_decode($this->paypal_lib->paypal_client_token($Token->access_token));
+			//$Order = $this->paypal_lib->paypal_setorder($Token->access_token);
+			//die($Order);
+			//die($client_token_response);
+			//die($client_token_response->client_token);
+			$data['client_token'] = $client_token_response->client_token;
+			
 			$this->render('book/stripe', $data);	
 	}
+
+
+	function paypalorder($amount = '', $token = ''){
+
+		$Token = json_decode($this->paypal_lib->paypal_auth());
+		$Order = $this->paypal_lib->paypal_setorder($amount, $Token->access_token);
+		echo $Order;
+		//echo 'test';
+
+	}
+
+	function paypalcard_success(){
+
+		
+		echo '<pre>'; print_r($_REQUEST);
+		//echo 'test';
+
+	}
+
 	
 	function success($orderid = ''){
 		

@@ -227,7 +227,7 @@ class Homepage extends Front_Controller {
 		$data['meta_keywords']		=	$page->meta_keywords;
 		$data['page_title']			=  (empty($page->meta_title))?$page->title:$page->meta_title;
 		$data['room_types']	= $this->room_type_model->get_all();
-			
+		// die($_POST['room_type_id']);
 		$order	= $this->calendar_model->get_first_order();
 		$data['calendar_result']		=	array();
 				if(!empty($_POST['room_type_id'])){		
