@@ -16,7 +16,7 @@ Class Book_model extends CI_Model
 	function save_order($save)
     {
 			   	
-		       $this->db->insert('orders',$save);
+		$this->db->insert('orders',$save);
 		return $this->db->insert_id();
     }
 	function save_payment($save){

@@ -54,7 +54,7 @@
         									<?php if($new->status!=2){?>
         									<a class="btn btn-theme" href="<?php echo site_url('front/account/cancel/'.$new->id); ?>"><i class="fa fa-close"></i> <?php echo lang('cancel')?></a>
         									<?php } ?>
-        									<a class="btn btn-theme" href="<?php echo site_url('front/account/payments/'.$new->id); ?>"  style="margin-left:5px;><i><?php echo $this->setting->currency_symbol ?></i> <?php echo lang('payment')?></a>						 
+        									<!-- <a class="btn btn-theme" href="<?php echo site_url('front/account/payments/'.$new->id); ?>"  style="margin-left:5px;"><i><?php echo $this->setting->currency_symbol ?></i> <?php echo lang('payment')?></a>						  -->
         									<a class="btn btn-theme" href="<?php echo site_url('front/account/order/'.$new->id); ?>" style="margin-left:5px;"><i class="fa fa-file-text-o"></i> <?php echo lang('view')?></a>						
         								</div>
         							</td>

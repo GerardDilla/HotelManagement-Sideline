@@ -48,6 +48,9 @@ $user	=	$this->auth->get_admin($admin['id']);
 		
 		<li class="<?php echo ($this->uri->segment(2)=='floors')?'active':''?>"><a href="<?php echo site_url('admin/floors')?>"><i class="fa fa-circle-o"></i> <span><?php echo lang('floors');?></span></a></li>
 			<li class="<?php echo ($this->uri->segment(2)=='amenities')?'active':''?>"><a href="<?php echo site_url('admin/amenities')?>"><i class="fa fa-circle-o"></i> <span><?php echo lang('amenities');?></span></a></li>
+      
+      <li class="<?php echo ($this->uri->segment(2)=='inventory')?'active':''?>"><a href="<?php echo site_url('admin/amenities')?>"><i class="fa fa-circle-o"></i> Inventory</a></li>
+
       <li class="<?php echo ($this->uri->segment(2)=='facilities')?'active':''?>"><a href="<?php echo site_url('admin/facilities')?>"><i class="fa fa-circle-o"></i> <span><?php echo lang('facilities');?></span></a></li>
 			<li class="<?php echo ($this->uri->segment(2)=='housekepping_status')?'active':''?>"><a href="<?php echo site_url('admin/housekepping_status')?>"><i class="fa fa-circle-o"></i> <span><?php echo lang('housekeping_status');?></span></a></li>
 		  </ul>

@@ -40,6 +40,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <script src="<?php echo base_url('assets/front')?>/js/owl.carousel.js"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/front')?>/js/move-top.js"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/front')?>/js/easing.js"></script>
+<script type="text/javascript" src="<?php echo base_url('assets/front')?>/js/client_captcha.js"></script>
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
 		$(".scroll").click(function(event){		
@@ -48,7 +49,50 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		});
 	});
 </script>
-<!-- start-smoth-scrolling -->
+
+
+<style>
+/* Captcha */
+	p.wrong {
+		display: none;
+	}
+
+	p.wrong.shake {
+		display: block;
+	}
+
+	p.wrong.shake {
+		animation: shake .4s cubic-bezier(.36, .07, .19, .97) both;
+		transform: translate3d(0, 0, 0);
+		backface-visibility: hidden;
+		perspective: 1000px;
+	}
+
+	@keyframes shake {
+		10%,
+		90% {
+			transform: translate3d(-1px, 0, 0);
+		}
+		20%,
+		80% {
+			transform: translate3d(1px, 0, 0);
+		}
+		30%,
+		50%,
+		70% {
+			transform: translate3d(-2px, 0, 0);
+		}
+		40%,
+		60% {
+			transform: translate3d(2px, 0, 0);
+		}
+	}
+
+	.controls img {
+		height: 20px;
+	}
+
+</style>
 
 </head>
 <body>
@@ -235,14 +279,43 @@ $langs	= $this->homepage_model->get_languages();
 		  </div>
 		  <div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-			  <button type="submit" class="btn btn-theme loginregister"><?php echo lang('signup')?></button>
+			  <!-- <button type="submit" class="btn btn-theme loginregister"><?php echo lang('signup')?></button> -->
+			  	<div class="captcha-chat">
+					<div class="captcha-container media">
+						<div class="media-body">
+							<p class="security">Security Check:</p>                
+						</div>
+						<div id="captcha">
+							<div class="controls" >
+								<input class="user-text btn-common" placeholder="Type here" type="text" />
+								<button type="button" class=" refresh btn-common" style="width:38px; height:auto">
+									<!-- this image should be converted into inline svg -->
+									<img style="width:100%" src="<?php echo base_url('assets/front')?>/images/refresh_icon.png" alt="refresh icon">
+								</button>
+								<hr>
+								<button type="button" class="btn btn-info validate btn-common loginregister" >
+									<?php echo lang('signup')?>
+									<!-- <img style="width:100%" src="<?php echo base_url('assets/front')?>/images/enter_icon.png" alt="submit icon"> -->
+								</button>
+
+
+							</div>
+						</div>
+						<!-- <p class="wrong info">Wrong!, please try again.</p> -->
+						<p style="display:none" class="wrong info">Invalid!, please try again.</p>
+					</div>
+				</div>
 			</div>
 		  </div>
+
+
+
 		  
 		</form>
       </div>
       <div class="modal-footer" style="background-color:rgba(0, 173, 138, 0.06);">
         <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo lang('close')?></button>
+
       </div>
     </div>
 
@@ -346,9 +419,29 @@ $( "#signup_form" ).submit(function( event ) {
 		//alert(result);return false;
 			  if(result==1)
 				{
-					toastr.success('You Signup In Successfully');
+					//toastr.success('You Signup In Successfully');
 					//location.reload(); 
-			   		window.location.reload();
+			   		//window.location.reload();
+					   	$.ajax({
+							url: SITE_URL+'/front/homepage/login',
+							type:'POST',
+							data:$("#signup_form").serialize(),
+							success:function(result){
+							//alert(result);return false;
+								if(result==1)
+									{
+										toastr.success('You Signup In Successfully');
+										window.location.reload();
+								}
+									else
+									{
+										remove_loader();
+										toastr.error(result);
+										//$('#err').html(result);
+									}
+							
+							}
+						});
 			   }
 				else
 				{
@@ -358,7 +451,7 @@ $( "#signup_form" ).submit(function( event ) {
 				}
 		
 		 }
-	  });
+	});
 });
 
 			$("#signup_form").validate({
@@ -394,7 +487,7 @@ $( "#signup_form" ).submit(function( event ) {
 						
                     },submitHandler: function(form) {
 						// do other things for a valid form
-						form.submit();
+						//form.submit();
 					  }
 			});
 			
@@ -404,7 +497,7 @@ $( "#signup_form" ).submit(function( event ) {
 											   form.submit(); 
 										   return false; // prevent normal form posting
 									}
-				 });
+				});
                  
                
 							    $(document).ready(function() {
@@ -439,4 +532,41 @@ $( "#signup_form" ).submit(function( event ) {
 							    
 			
 		
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.body.scrollTop; //force css repaint to ensure cssom is ready
+
+        var timeout; //global timout variable that holds reference to timer
+
+        var captcha = new $.Captcha({
+            onFailure: function() {
+
+                $(".captcha-chat .wrong").show({
+                    duration: 30,
+                    done: function() {
+                        var that = this;
+                        clearTimeout(timeout);
+                        $(this).removeClass("shake");
+                        $(this).css("animation");
+                        //Browser Reflow(repaint?): hacky way to ensure removal of css properties after removeclass
+                        $(this).addClass("shake");
+                        var time = parseFloat($(this).css("animation-duration")) * 1000;
+                        timeout = setTimeout(function() {
+                            $(that).removeClass("shake");
+                        }, time);
+                    }
+                });
+
+            },
+
+            onSuccess: function() {
+
+                $( "#signup_form" ).submit();
+				
+            }
+        });
+
+        captcha.generate();
+    });
 </script>

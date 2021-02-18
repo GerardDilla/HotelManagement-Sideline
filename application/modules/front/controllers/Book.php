@@ -368,7 +368,7 @@ class Book extends Front_Controller {
 	function stripe(){
 			//echo '<pre>'; print_r($this->session->all_userdata());die;
 			$data['booking_data']	=		$booking_data	=	$this->session->userdata('booking_data');
-			// 	//echo '<pre>'; print_r($booking_data);die;	
+			//echo '<pre>'; print_r($booking_data);die;	
 			// if ($this->input->server('REQUEST_METHOD') === 'POST')
         	// {
 			// 	try{
@@ -453,32 +453,38 @@ class Book extends Front_Controller {
 			// }
 			// $data['page_title']	=	lang('payment');
 			$Token = json_decode($this->paypal_lib->paypal_auth());
-			//die($Token);
 			$client_token_response = json_decode($this->paypal_lib->paypal_client_token($Token->access_token));
-			//$Order = $this->paypal_lib->paypal_setorder($Token->access_token);
-			//die($Order);
-			//die($client_token_response);
-			//die($client_token_response->client_token);
+
+			// $Order = json_decode($this->paypal_lib->paypal_setorder($Token->access_token));
 			$data['client_token'] = $client_token_response->client_token;
-			
+			$this->session->set_userdata('ctoken',$data['client_token']);
+			$this->session->set_userdata('amount','12');
+			// $data['order_token'] = $Order->id;
+
 			$this->render('book/stripe', $data);	
 	}
 
 
-	function paypalorder($amount = '', $token = ''){
+	function paypalorder(){
 
 		$Token = json_decode($this->paypal_lib->paypal_auth());
-		$Order = $this->paypal_lib->paypal_setorder($amount, $Token->access_token);
+		$client_token_response = json_decode($this->paypal_lib->paypal_client_token($Token->access_token));
+		$Order = $this->paypal_lib->paypal_setorder($Token->access_token);
 		echo $Order;
-		//echo 'test';
 
 	}
+	function testsuccess(){
+		echo 'yay';
+	}
 
-	function paypalcard_success(){
+	function paypalcard_success($orderid = ''){
 
-		
-		echo '<pre>'; print_r($_REQUEST);
-		//echo 'test';
+		$booking_data	=	$this->session->userdata('booking_data');
+		$Token = json_decode($this->paypal_lib->paypal_auth());
+		$client_token_response = json_decode($this->paypal_lib->paypal_client_token($Token->access_token));
+		$Order = $this->paypal_lib->paypal_getorder($orderid,$Token->access_token);
+		$order_status = json_decode($Order);
+		$this->success($booking_data['order_id']);
 
 	}
 
@@ -491,7 +497,7 @@ class Book extends Front_Controller {
 		if(!empty($booking_data)){
 			$orderid = $booking_data['order_id'];
 		}
-		echo '<pre>'; print_r($booking_data);//die;
+		//die(print_r($booking_data));//die;
 		
 		$id									=	$orderid;
 		$save['payment_status']						=	3;	//partialy_paid

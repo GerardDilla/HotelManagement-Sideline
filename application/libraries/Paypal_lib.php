@@ -350,18 +350,42 @@ class paypal_lib {
 		return $result;
 	}
 
-	function paypal_setorder($amount = '', $token = ''){
+	function paypal_setorder($token = '', $amount = ''){
 
 
 		$ch = curl_init();
+
 		curl_setopt($ch, CURLOPT_URL, 'https://api-m.sandbox.paypal.com/v2/checkout/orders');
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, "{\n  \"intent\": \"CAPTURE\",\n  \"purchase_units\": [\n    {\n      \"amount\": {\n        \"currency_code\": \"USD\",\n        \"value\": \"100.00\"\n      }\n    }\n  ]\n}");
+		
+		$headers = array();
+		$headers[] = 'Content-Type: application/json';
+		$headers[] = 'Authorization: Bearer '.$token.'';
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		
+		$result = curl_exec($ch);
+		if (curl_errno($ch)) {
+			echo 'Error:' . curl_error($ch);
+		}
+		curl_close($ch);
+		return $result;
+
+	}
+	
+	function paypal_getorder($orderid = '', $token = ''){
+
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, 'https://api-m.sandbox.paypal.com/v2/checkout/orders/'.$orderid.'/capture');
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_POST, 1);
 
 		$headers = array();
 		$headers[] = 'Content-Type: application/json';
 		$headers[] = 'Authorization: Bearer '.$token;
+		$headers[] = 'Accept-Language: en_US';
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 		$result = curl_exec($ch);
@@ -372,7 +396,6 @@ class paypal_lib {
 		return $result;
 
 	}
-	
 	
 
 }

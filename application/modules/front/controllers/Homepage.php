@@ -85,7 +85,7 @@ class Homepage extends Front_Controller {
 			$save['mobile']				= $this->input->post('mobile');
 			$save['password']			= sha1($this->input->post('password'));
 			$save['added']				= date('Y-m-d H:i:s');
-			
+			// die(print_r($save));
 			//echo '<pre>';print_r($save);die;
 			$id	=	$this->account_model->save_guest($save);
 			$row	=	$this->homepage_model->get_template(1);
