@@ -20,25 +20,14 @@
 					<div class="form-group">
 					  <div class="row">
 						<div class="col-md-2">
-                      		<label><?php echo lang('name')?></label>
+                      		<label>Item Name</label>
                       	</div>
 						<div class="col-md-6">
-							<?php echo $floor->name ?>
+							<?php echo $inventory->itemName ?>
 						</div>	
 					  </div>		
                     </div>
 					
-					
-					<div class="form-group">
-					  <div class="row">
-						<div class="col-md-2">
-                      		<label><?php echo lang('floor_number')?></label>
-                      	</div>
-						<div class="col-md-6">
-							<?php echo $floor->floor_no ?>
-						</div>	
-					  </div>		
-                    </div>
 					
 					<div class="form-group">
 					  <div class="row">
@@ -46,7 +35,18 @@
                       		<label><?php echo lang('description')?></label>
                       	</div>
 						<div class="col-md-6">
-							<?php echo $floor->description?>
+							<?php echo $inventory->itemDescription?>
+						</div>	
+					  </div>		
+                    </div>
+					
+					<div class="form-group">
+					  <div class="row">
+						<div class="col-md-2">
+                      		<label>Stock</label>
+                      	</div>
+						<div class="col-md-6">
+							<?php echo $inventory->stock?>
 						</div>	
 					  </div>		
                     </div>
@@ -56,7 +56,7 @@
                       		<label><?php echo lang('active')?></label>
                       	</div>
 						<div class="col-md-6">
-							<?php echo ($floor->active==1)?lang('yes'):lang('no');?> 
+							<?php echo ($inventory->active==1)?lang('yes'):lang('no');?> 
 						</div>	
 					  </div>		
                     </div>

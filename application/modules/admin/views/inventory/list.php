@@ -16,7 +16,7 @@
          <div class="row">
 		 	<div class="col-md-12">
 				<div class="btn-group pull-right">
-					<a class="btn btn-success" href="<?php echo site_url('admin/amenities/form'); ?>"><i class="fa fa-plus"></i> <?php echo lang('add');?></a>
+					<a class="btn btn-success" href="<?php echo site_url('admin/Inventory/form'); ?>"><i class="fa fa-plus"></i> <?php echo lang('add');?></a>
 				</div>
 
 			</div>
@@ -26,7 +26,7 @@
             <div class="col-xs-12">
               <div class="box">
                 <div class="box-header">
-                  <h3 class="box-title"><?php echo lang('amenities'); ?></h3>
+                  <h3 class="box-title">Inventory</h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
 						<table class="table table-striped" id="example1">
@@ -34,25 +34,29 @@
 		<tr>
 			<th>#</th>
 			<th><?php echo lang('name'); ?></th>
-			<th><?php echo lang('active'); ?></th>
+			<th>Description</th>
+			<th>Stock</th>
+			<th>Status</th>
 			<th><?php echo lang('action'); ?></th>
 		</tr>
 	</thead>
 	
 	<tbody >
-<?php if($amenities):?>		
-<?php $i=1;foreach ($amenities as $new):?>
+<?php if($inventory):?>		
+<?php $i=1;foreach ($inventory as $new):?>
 		<tr>
 			<td><?php echo $i;?></td>
-			<td class="gc_cell_left" ><?php echo  $new->name; ?></td>
+			<td class="gc_cell_left" ><?php echo  $new->itemName; ?></td>
+			<td class="gc_cell_left" ><?php echo  $new->itemDescription; ?></td>
+			<td class="gc_cell_left" ><?php echo  $new->stock; ?></td>
 			<td><?php echo  ($new->active==1)?'Active':''; ?></td>
 			<td>
 				<div class="btn-group" style="float:right">
-					<a class="btn btn-default" href="<?php echo site_url('admin/amenities/view/'.$new->id); ?>"><i class="fa fa-eye"></i> <?php echo lang('view')?></a>
-					<a class="btn btn-primary" href="<?php echo site_url('admin/amenities/form/'.$new->id); ?>"><i class="fa fa-edit"></i> <?php echo lang('edit')?></a>
+					<a class="btn btn-default" href="<?php echo site_url('admin/Inventory/view/'.$new->ID); ?>"><i class="fa fa-eye"></i> <?php echo lang('view')?></a>
+					<a class="btn btn-primary" href="<?php echo site_url('admin/Inventory/form/'.$new->ID); ?>"><i class="fa fa-edit"></i> <?php echo lang('edit')?></a>
 					
 					
-					<a class="btn btn-danger" href="<?php echo site_url('admin/amenities/delete/'.$new->id); ?>" onclick="return areyousure(this);"><i class="fa fa-trash"></i> <?php echo lang('delete')?></a>
+					<a class="btn btn-danger" href="<?php echo site_url('admin/Inventory/delete/'.$new->ID); ?>" onclick="return areyousure(this);"><i class="fa fa-trash"></i> <?php echo lang('delete')?></a>
 				</div>
 			</td>
 		</tr>

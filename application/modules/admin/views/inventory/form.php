@@ -18,37 +18,36 @@
               <div class="box">
                 <div class="box-body">
 					
-				<form method="post" action="<?php echo site_url('admin/amenities/form/'.$id); ?>" enctype="multipart/form-data">	
+				<form method="post" action="<?php echo site_url('admin/Inventory/form/'.$ID); ?>" enctype="multipart/form-data">
+
 					<div class="form-group">
 					  <div class="row">
 						<div class="col-md-4">
                       		<label><?php echo lang('name') ?></label>
                       		<?php
-								$data	= array('name'=>'name', 'value'=>set_value('name', $name), 'class'=>'form-control');
+								$data	= array('name'=>'name', 'value'=>set_value('name', $itemName), 'class'=>'form-control');
 								echo form_input($data); ?>
 						</div>	
 					  </div>		
                     </div>
+
 					<div class="form-group">
 					  <div class="row">
 						<div class="col-md-4">
-                      		<label><?php echo lang('image') ?></label>
-                      		<input type="file" name="image"   class="form-control"/>
+                      		<label>Stock</label>
+                      		<?php
+								$data	= array('name'=>'stock', 'value'=>set_value('stock', $stock), 'class'=>'form-control');
+								echo form_input($data); ?>
 						</div>	
-						<div class="col-md-4">
-							<?php if(!empty($image)){?>
-								<img src="<?php echo base_url('assets/admin/uploads/amenities/'.$image)?>" height="100" width="80" />
-							<?php } ?>
-						</div>
 					  </div>		
                     </div>
-					
+
 					<div class="form-group">
 					  <div class="row">
 						<div class="col-md-4">
-                      		<label><?php echo lang('description') ?></label>
+                      		<label>Description</label>
                       		<?php
-								$data	= array('name'=>'description', 'value'=>set_value('description', $description), 'class'=>'form-control');
+								$data	= array('name'=>'description', 'value'=>set_value('description', $itemDescription), 'class'=>'form-control');
 								echo form_textarea($data); ?>
 						</div>	
 					  </div>		
