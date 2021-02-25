@@ -236,7 +236,7 @@ class Homepage extends Front_Controller
 		// die($_POST['room_type_id']);
 		$order	= $this->calendar_model->get_first_order();
 		$data['calendar_result']		=	array();
-		if (!empty($_POST['room_type_id'])) {s
+		if (!empty($_POST['room_type_id'])) {
 			if ($order) {
 				$room_type	=	$this->calendar_model->get_room_type();
 
