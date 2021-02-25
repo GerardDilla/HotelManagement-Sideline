@@ -99,7 +99,10 @@
 									<th><?php echo lang('room_number'); ?></th>
 									<th><?php echo lang('room_type'); ?></th>
 									<th><?php echo lang('floor_number'); ?></th>
+									<th>Status</th>
 									<th><?php echo lang('action'); ?></th>
+									
+
 								</tr>
 							</thead>
 							
@@ -111,6 +114,13 @@
 									<td class="gc_cell_left" ><?php echo  $new->room_no; ?></td>
 									<td><?php echo  $new->room_type; ?></td>
 									<td><?php echo  $new->floor_no; ?> - <?php echo  $new->floor; ?></td>
+									<td>
+									<?php if($new->room_status == 'Available'): ?>
+										<span style="background-color:#fcaf50; color:#fff; padding:5px"><?php echo  $new->room_status; ?></span>
+									<?php else: ?>
+										<span style="background-color:#ba000d; color:#fff; padding:5px"><?php echo  $new->room_status; ?></span>
+									<?php endif; ?>
+									</td>
 									<td>
 										<div class="btn-group" style="float:right">
 											<a class="btn btn-info " href="<?php echo site_url('admin/rooms/housekeeping/'.$new->id); ?>"><i class="fa fa-home"></i> <?php echo lang('housekeeping')?></a>

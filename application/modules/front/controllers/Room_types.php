@@ -15,7 +15,7 @@ class Room_types extends Front_Controller {
 		$data['meta_keywords']		=	$this->setting->meta_keywords;
 		$data['page_title']		= lang('room_types');
 		$data['room_types']		= $this->homepage_model->get_room_types_all();
-		//echo '<pre>'; print_r($data['room_types']);die;
+		//==echo '<pre>'; print_r($data['room_types']);die;
 		$this->render('room_types/room_types', $data);		
 	}
 	

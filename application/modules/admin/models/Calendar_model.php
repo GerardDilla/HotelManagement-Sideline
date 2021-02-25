@@ -17,6 +17,7 @@ Class Calendar_model extends CI_Model
 	function get_room_type()
     {
 				$this->db->where('room_type_id',$_POST['room_type_id']);
+				$this->db->where('room_status','Available');
 				$this->db->select('rooms.*,count(room_no) as total_rooms');
 		return  $this->db->get('rooms')->row();
     }
