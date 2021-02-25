@@ -1,16 +1,16 @@
 <?php
 
-class Homepage extends Front_Controller {
+class Homepage extends Front_Controller
+{
 
 	function __construct()
-	{		
+	{
 		parent::__construct();
-		$this->load->model(array('homepage_model','login_model','account_model','room_type_model','calendar_model'));
+		$this->load->model(array('homepage_model', 'login_model', 'account_model', 'room_type_model', 'calendar_model'));
 		$this->output->nocache();
 		$this->load->library('form_validation');
-	
 	}
-	
+
 	function index()
 	{
 		$data['meta_description']	=	$this->setting->meta_description;
@@ -19,51 +19,52 @@ class Homepage extends Front_Controller {
 		$data['banners']		= $this->homepage_model->get_banners();
 		$data['testimonials']	= $this->homepage_model->get_testimonials();	// get 6 testimonials
 		$data['room_types']		= $this->homepage_model->get_room_types();
-		$data['coupons']		= $this->homepage_model->get_coupons();		
+		$data['coupons']		= $this->homepage_model->get_coupons();
 		//$data['testimonials']	= $this->testimonial_model->get_all();
 		//echo '<pre>'; print_r($data['coupons']);die;
 		$this->render('homepage/homepage', $data);
-			
 	}
-	
-	function session_test(){
-		$this->session->set_userdata('test','test');
+
+	function session_test()
+	{
+		$this->session->set_userdata('test', 'test');
 		redirect('front/homepage/test_session');
 	}
-	function test_session(){
+	function test_session()
+	{
 		echo $this->session->userdata('test');
 	}
 
-		
-	function login(){
+
+	function login()
+	{
 		//echo '<pre>'; print_r($_POST);die;
-		
+
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('email', 'Email', 'trim|required|max_length[32]');
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[4]');
-		
-		if ($this->form_validation->run() == TRUE)
-		{
-			
+
+		if ($this->form_validation->run() == TRUE) {
+
 			$email		=	$this->input->post('email');
 			$password	=	$this->input->post('password');
-					
-			$return 	=	$this->login_model->auth($email,$password,TRUE);
-			if($return){
-				
+
+			$return 	=	$this->login_model->auth($email, $password, TRUE);
+			if ($return) {
+
 				$this->session->set_userdata($return);
 				//echo json_encode($this->session->userdata('front_user'));
 				echo 1;
-			}else{
+			} else {
 				echo 'Email or Password invalid';
 			}
-			
-		}else{
+		} else {
 			echo validation_errors();
 		}
-	}	
-	
-	function signup(){
+	}
+
+	function signup()
+	{
 		$id	=	false;
 		//echo '<pre>'; print_r($_POST);die;
 		$this->load->library('form_validation');
@@ -71,12 +72,11 @@ class Homepage extends Front_Controller {
 		$this->form_validation->set_rules('lastname', 'lang:lastname', 'trim|required');
 		$this->form_validation->set_rules('email', 'lanng:email', 'trim|required|max_length[128]|is_unique[guests.email]');
 		$this->form_validation->set_rules('mobile', 'lang:mobile', 'trim|required|max_length[32]');
-				
+
 		$this->form_validation->set_rules('password', 'lang:password', 'required|min_length[6]');
 		$this->form_validation->set_rules('confirm', 'lang:password_confirm', 'required|matches[password]');
 
-		if ($this->form_validation->run() == TRUE)
-		{
+		if ($this->form_validation->run() == TRUE) {
 			$password	=	$this->input->post('password');
 			$save['id']					= $id;
 			$save['firstname']			= $this->input->post('firstname');
@@ -89,114 +89,120 @@ class Homepage extends Front_Controller {
 			//echo '<pre>';print_r($save);die;
 			$id	=	$this->account_model->save_guest($save);
 			$row	=	$this->homepage_model->get_template(1);
-			
+
 			$row['subject'] = str_replace('{site_name}', $this->setting->name, $row['subject']);
 			$row['content'] = str_replace('{site_name}', $this->setting->name, $row['content']);
 			$row['content'] = str_replace('{customer_name}', $save['firstname'], $row['content']);
-			
-			$msg 				 = html_entity_decode($row['content'],ENT_QUOTES, 'UTF-8');
+
+			$msg 				 = html_entity_decode($row['content'], ENT_QUOTES, 'UTF-8');
 			$params['recipient'] = $save['email'];
 			$params['subject'] 	 = $row['subject'];
 			$params['message']   = $msg;
 			$this->mailer->send($params);
-			
+
 			$this->session->set_flashdata('message', 'You Signup In Successfully');
-			if($id){
-				$return 	=	$this->login_model->auth($save['email'],$password,'','');
+			if ($id) {
+				$return 	=	$this->login_model->auth($save['email'], $password, '', '');
 			}
-			if($return){
-				echo 1;die;
-			}else{
+			if ($return) {
+				echo 1;
+				die;
+			} else {
 				echo 'Something Went Wrong Try Again...!';
 			}
-			
-		}else{
+		} else {
 			echo validation_errors();
 		}
-	}	
-	
-	function logout(){
+	}
+
+	function logout()
+	{
 		$this->login_model->logout();
 		$this->session->set_flashdata('message', "You Logout Successfully");
 		redirect('front/homepage/');
 	}
-	
-	function change_currency(){
+
+	function change_currency()
+	{
 		$currency		= $this->homepage_model->get_currency_by_currency_code($_POST['currency_code']);
-		$this->session->set_userdata('currency',$_POST['currency_code']);
-		$this->session->set_userdata('currency_sybmol',$currency->currrency_symbol);
-		$this->session->set_flashdata('message', "Currency changed to ".$_POST['currency_code']);
-		
+		$this->session->set_userdata('currency', $_POST['currency_code']);
+		$this->session->set_userdata('currency_sybmol', $currency->currrency_symbol);
+		$this->session->set_flashdata('message', "Currency changed to " . $_POST['currency_code']);
+
 		$from = $this->setting->currency_code;
-		$sess_curruncy = $this->session->userdata('currency');	
-		if(!empty($sess_curruncy)){
+		$sess_curruncy = $this->session->userdata('currency');
+		if (!empty($sess_curruncy)) {
 			$to = $this->session->userdata('currency');
-		}else{
+		} else {
 			$to = $from;
 		}
-		
-			$from_Currency = urlencode($from);
-			$to_Currency = urlencode($to);
-				if($from_Currency==$to_Currency){
-					$value	= 1;
-				}else{
-					$encode_amount = 1;
-					$get = file_get_contents("https://www.google.com/finance/converter?a=$encode_amount&from=$from_Currency&to=$to_Currency");
-					$get = explode("<span class=bld>",$get);
-					$get = explode("</span>",$get[1]);
-					
-					$value = preg_replace("/[^0-9\.]/", null, $get[0]);
-				}
-			$this->session->set_userdata('currency_result',$value);
-		
-		echo 1;exit;
+
+		$from_Currency = urlencode($from);
+		$to_Currency = urlencode($to);
+		if ($from_Currency == $to_Currency) {
+			$value	= 1;
+		} else {
+			$encode_amount = 1;
+			$get = file_get_contents("https://www.google.com/finance/converter?a=$encode_amount&from=$from_Currency&to=$to_Currency");
+			$get = explode("<span class=bld>", $get);
+			$get = explode("</span>", $get[1]);
+
+			$value = preg_replace("/[^0-9\.]/", null, $get[0]);
+		}
+		$this->session->set_userdata('currency_result', $value);
+
+		echo 1;
+		exit;
 	}
-	
-	function switch_language($language = "") {
-			//echo $_POST['id'];
-			if($_POST['id']==0){
-				$this->session->set_userdata(array('lang'       => 'english'));
-			}
-			$lang	=	$this->homepage_model->get_language_id($_POST['id']);
-			if($lang){
-				$this->session->set_userdata(array(
-                            'lang'       => $lang->name
-                    ));
-			}
-			$this->session->set_flashdata('message', lang('language_change'));
-			echo 1;exit;
-			//echo '<pre>'; print_r($this->session->all_userdata());die;
-    }
-	
-	function get_password_link(){
+
+	function switch_language($language = "")
+	{
+		//echo $_POST['id'];
+		if ($_POST['id'] == 0) {
+			$this->session->set_userdata(array('lang'       => 'english'));
+		}
+		$lang	=	$this->homepage_model->get_language_id($_POST['id']);
+		if ($lang) {
+			$this->session->set_userdata(array(
+				'lang'       => $lang->name
+			));
+		}
+		$this->session->set_flashdata('message', lang('language_change'));
+		echo 1;
+		exit;
+		//echo '<pre>'; print_r($this->session->all_userdata());die;
+	}
+
+	function get_password_link()
+	{
 		//echo '<pre>'; print_r($_POST);die;
 		$email = $this->input->post('email');
-		$token['token'] = time().sha1(uniqid(mt_rand(), true));	
+		$token['token'] = time() . sha1(uniqid(mt_rand(), true));
 		$reset = $this->homepage_model->edit_admin_to_save_code($email, $token);
-		if ($reset)
-		{						
-			echo 1;exit;
+		if ($reset) {
+			echo 1;
+			exit;
 		}
 	}
-	
-	function reset_password($code){
+
+	function reset_password($code)
+	{
 		$this->load->helper('form');
 		$user	=	$this->homepage_model->get_admin_by_code($code);
 		$data['user']	=	$user;
-		if ($this->input->server('REQUEST_METHOD') === 'POST'){
+		if ($this->input->server('REQUEST_METHOD') === 'POST') {
 			$this->load->library('form_validation');
 			$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
 			$this->form_validation->set_rules('confirm', 'Confirm Password', 'required|matches[password]');
-			
-			
-			if ($this->form_validation->run()== TRUE)
-			{
-			
+
+
+			if ($this->form_validation->run() == TRUE) {
+
 				$pass = array(
-				'token'=>"expired",
-				'password'=>sha1($this->input->post('password'))
+					'token' => "expired",
+					'password' => sha1($this->input->post('password'))
 				);
-				
+
 				$email = $this->input->post('email');
 				$this->homepage_model->save_password($pass, $user->email);
 				$this->session->set_flashdata('message', "Password Updated");
@@ -208,60 +214,58 @@ class Homepage extends Front_Controller {
 		$data['page_title']		= lang('reset_password');
 		$this->render('homepage/reset', $data);
 	}
-	
-	function sendmail(){
-		$message	=	'Good Morning..';	
-		$msg 				 = html_entity_decode($message,ENT_QUOTES, 'UTF-8');
+
+	function sendmail()
+	{
+		$message	=	'Good Morning..';
+		$msg 				 = html_entity_decode($message, ENT_QUOTES, 'UTF-8');
 		$params['recipient'] = 'mukeshgodha1991@gmail.com';
 		$params['subject'] 	 = "Hotel Test";
 		$params['message']   = $msg;
 		$this->mailer->send($params);
-	
 	}
-	
+
 	function page($id)
 	{
 		$data['page']			=	$page	=	 $this->homepage_model->get_page($id);
-			//echo '<pre>'; print_r($data['page']);die;
+		//echo '<pre>'; print_r($data['page']);die;
 		$data['meta_description']	=	$page->meta_description;
 		$data['meta_keywords']		=	$page->meta_keywords;
-		$data['page_title']			=  (empty($page->meta_title))?$page->title:$page->meta_title;
+		$data['page_title']			=  (empty($page->meta_title)) ? $page->title : $page->meta_title;
 		$data['room_types']	= $this->room_type_model->get_all();
 		// die($_POST['room_type_id']);
 		$order	= $this->calendar_model->get_first_order();
 		$data['calendar_result']		=	array();
-				if(!empty($_POST['room_type_id'])){		
-				    if($order){
-						$room_type	=	$this->calendar_model->get_room_type();
-						
-						  $begin = new DateTime($order->check_in);
-						
-						$end = new DateTime(date('Y-m-d', strtotime('+ 120 days')));
-						
-						$interval = DateInterval::createFromDateString('1 day');
-						$period = new DatePeriod($begin, $interval, $end);
-						
-						foreach($period as $dt){
-							$date		=	 $dt->format( "Y-m-d" );	
-							$dayno		=	 $dt->format( "N" );
-							$day		=	 $dt->format( "D" );
-							$day		=	strtolower($day);
-							$result	=		$this->calendar_model->get_booking_by_room_type_and_date($date);		
-							
-							//$data['result'][$date]['date']			=	$date;
-							$data['calendar_result'][$date]['available']		=	$room_type->total_rooms - $result->bookings;
-							$data['calendar_result'][$date]['unavailable']	=	$result->bookings;
-						}
-                    }    
-					//echo '<pre>'; print_r($data['calendar_result']);die;
-				}		
-				
-		
+		if (!empty($_POST['room_type_id'])) {s
+			if ($order) {
+				$room_type	=	$this->calendar_model->get_room_type();
+
+				$begin = new DateTime($order->check_in);
+
+				$end = new DateTime(date('Y-m-d', strtotime('+ 120 days')));
+
+				$interval = DateInterval::createFromDateString('1 day');
+				$period = new DatePeriod($begin, $interval, $end);
+
+				foreach ($period as $dt) {
+					$date		=	 $dt->format("Y-m-d");
+					$dayno		=	 $dt->format("N");
+					$day		=	 $dt->format("D");
+					$day		=	strtolower($day);
+					$result	=		$this->calendar_model->get_booking_by_room_type_and_date($date);
+
+					//$data['result'][$date]['date']			=	$date;
+					$data['calendar_result'][$date]['available']		=	$room_type->total_rooms - $result->bookings;
+					$data['calendar_result'][$date]['unavailable']	=	$result->bookings;
+				}
+			}
+			//echo '<pre>'; print_r($data['calendar_result']);die;
+		}
+
+
 		$data['page_title']	= lang('availability_calendar');
-		
+
 		//$data['testimonials']	= $this->testimonial_model->get_all();
-		$this->render('homepage/page', $data);		
+		$this->render('homepage/page', $data);
 	}
-		
-	
 }

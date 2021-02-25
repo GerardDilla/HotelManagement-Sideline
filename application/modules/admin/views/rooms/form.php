@@ -56,11 +56,11 @@
 												<br>
 												<label>Toggle Availability</label>
 												<?php
-													$options = [
-														'Available'  => 'Available',
-														'Unavailable'    => 'Unavailable'
-													];
-													echo form_dropdown('availability', $options, $status,'class="form-control"');
+												$options = [
+													'Available'  => 'Available',
+													'Unavailable'    => 'Unavailable'
+												];
+												echo form_dropdown('availability', $options, $status, 'class="form-control"');
 												?>
 											</div>
 										</div>
